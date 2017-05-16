@@ -8,7 +8,9 @@ from Deployer.Controller.DeployerController import DeployerController
 from Deployer.Controller.HelloController import HelloController
 from Deployer.Service.Notification import Notification
 
-define('configuration', default=os.path.expanduser('~/.deployer.yml'), help='Path to configuration file')
+define('configuration', default=os.path.expanduser('~/.deployer.yml'), help='Path to configuration file', type=str)
+define('port', default=8012, help='Port to listen on', type=int)
+define('listen', default='', help='IP address to listen on, defaults to 0.0.0.0 to listen on all ports', type=str)
 
 parse_command_line()
 

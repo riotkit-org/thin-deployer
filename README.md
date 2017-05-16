@@ -44,6 +44,11 @@ python ./bin/deployer.py
 
 Use `--log-file-prefix={{ path_to_log_file }}` switch to save logs to file.
 
+#### Changing port number and bind address
+
+- `--port={{ port_number }}` switch will change server listen port
+- `--listen={{ ip_addres }}` makes server listen to given address, defaults to 0.0.0.0
+
 Example request to trigger the deployment
 -----------------------------------------
 

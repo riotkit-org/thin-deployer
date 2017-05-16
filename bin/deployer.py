@@ -16,8 +16,10 @@ if os.path.isdir(t):
     sys.path.append(t)
 
 import Deployer
+from tornado.options import options
 
 if __name__ == "__main__":
     app = Deployer.create_application()
-    app.listen(8012)
+    app.listen(options.port, options.listen)
+
     tornado.ioloop.IOLoop.current().start()

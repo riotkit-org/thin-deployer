@@ -4,7 +4,7 @@ import subprocess
 class Notification:
     def send_log(self, output, group_name, title):
         """
-        Sends the log output to the Wolnościowiec Notification using the shell client
+        Sends the log output to the Wolnosciowiec Notification using the shell client
         :param output: 
         :return: 
         """

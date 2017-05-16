@@ -1,5 +1,6 @@
 
 import tornado.web
+import tornado.log
 import os
 import sys
 import yaml
@@ -18,7 +19,7 @@ class DeployerApplication(tornado.web.Application):
 
     config = {}
 
-    def parse_configuration(self):
+    def parse_configuration(self, path = None):
         """
             Parse configuration YAML file
             (validates before proceeding)
@@ -26,18 +27,30 @@ class DeployerApplication(tornado.web.Application):
             The configuration array is accessible via self.config
         """
 
-        path = os.path.expanduser(options.configuration)
+        # fallback to default path (~/.deployer.yml)
+        if not path:
+            path = os.path.expanduser(options.configuration)
 
-        if not os.path.isfile(path):
-            print('File "' + path + '" not found')
+        # when a directory was specified to be included
+        if os.path.isdir(str(path)):
+            for filename in os.listdir(path):
+                if os.path.isfile(path + '/' + filename) and filename.endswith('.yml'):
+                    self.parse_configuration(path + '/' + filename)
+
+            return
+
+        if not os.path.isfile(str(path)):
+            tornado.log.app_log.error('File "' + str(path) + '" not found')
             sys.exit(1)
+
+        tornado.log.app_log.info('Parsing ' + path)
 
         pointer = open(path, "r")
         parsed = yaml.load(pointer)
         pointer.close()
 
         if not isinstance(parsed, dict) or len(parsed) == 0:
-            print('Empty configuration or not a dictionary on top level')
+            tornado.log.app_log.error('Empty configuration or not a dictionary on top level')
             sys.exit(1)
 
         node_definition = {
@@ -49,13 +62,17 @@ class DeployerApplication(tornado.web.Application):
         }
 
         for serviceName, attributes in parsed.items():
+
+            if "include" in attributes:
+                return self.parse_configuration(path=attributes['include'])
+
             for attribute_name, class_type in node_definition.items():
                 if not attribute_name in attributes or not isinstance(attributes[attribute_name], class_type):
                     print(serviceName + '[' + attribute_name + '] should be of a ' + str(class_type.__name__) + ' type')
                     sys.exit(1)
 
+            self.config[serviceName] = attributes
 
-        self.config = parsed
 
     def initialize(self):
         self.notification = Notification()

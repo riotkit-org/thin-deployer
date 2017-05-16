@@ -2,6 +2,7 @@
 import subprocess
 
 class Notification:
+
     def send_log(self, output, group_name, title):
         """
         Sends the log output to the Wolnosciowiec Notification using the shell client

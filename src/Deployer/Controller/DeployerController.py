@@ -1,7 +1,6 @@
 import tornado.web
 import tornado.log
 import subprocess
-import json
 import pwd
 import os
 
@@ -14,8 +13,9 @@ class DeployerController(tornado.web.RequestHandler):
         :return: 
         """
 
+        # get service information
         if not serviceName in self.application.config:
-            self.write(json.dumps({'message': 'Cannot find service', 'serviceName': serviceName}))
+            self.write({'message': 'Cannot find service', 'serviceName': serviceName})
             self.set_status(404, "Not Found")
 
             tornado.log.app_log.warning('Tried to reach service "' + str(serviceName) + '", but its not defined')
@@ -23,20 +23,44 @@ class DeployerController(tornado.web.RequestHandler):
 
         config = self.application.config[serviceName]
 
+        # validate authorization
         if not "X-Auth-Token" in self.request.headers or self.request.headers['X-Auth-Token'] != config['token']:
-            self.write(json.dumps({'message': 'Invalid auth token, please verify the X-Auth-Token header value', 'serviceName': serviceName}))
+            self.write({'message': 'Invalid auth token, please verify the X-Auth-Token header value', 'serviceName': serviceName})
             self.set_status(403, "Forbidden")
 
             tornado.log.app_log.warning('Invalid X-Auth-Token header value for service "' + serviceName + '"')
             return
 
-        output = self._run_commands(config)
+        output, is_success = self._run_commands(config)
 
+        # send a response
         self.set_status(202, "Accepted")
         self.add_header('X-Runs-As', pwd.getpwuid(os.getuid()).pw_name)
-        self.write(json.dumps({'output': output}))
+
+        if not is_success:
+            self.set_status(500, "At least one step failed")
+
+        self.write({'output': output})
+
+        # notify
+        self._notify(serviceName, output, config, is_success)
 
         return
+
+    def _notify(self, service_name, output, config, is_success):
+        """
+        Send a notification if its enabled
+        :param service_name: 
+        :param output: 
+        :return: 
+        """
+
+        if is_success:
+            status_name = "successully"
+        else:
+            status_name = "with a failure"
+
+        self.application.notification.send_log(output, config['notification_group'], '"' + service_name + '" deployment finished ' + status_name)
 
     def _run_commands(self, service):
         """
@@ -49,9 +73,18 @@ class DeployerController(tornado.web.RequestHandler):
 
         for command in service['commands']:
             tornado.log.app_log.warning('Invoking "' + command + '" in "' + service['pwd'] + '"')
-            output += str(self._invoke_process(command, service['pwd']))
 
-        return output
+            try:
+                output += str(self._invoke_process(command, service['pwd']))
+            except subprocess.CalledProcessError as exception:
+                message = 'Command "' + command + '" failed, output: "' + str(exception.output) + '"'
+
+                output += message
+                tornado.log.app_log.error(message)
+
+                return output, False
+
+        return output, True
 
 
     def _invoke_process(self, commmand, pwd):

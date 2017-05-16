@@ -1,3 +1,4 @@
+
 import tornado.web
 import os
 import sys
@@ -5,6 +6,7 @@ import yaml
 from tornado.options import define, parse_command_line, options
 from Deployer.Controller.DeployerController import DeployerController
 from Deployer.Controller.HelloController import HelloController
+from Deployer.Service.Notification import Notification
 
 define('configuration', default=os.path.expanduser('~/.deployer.yml'), help='Path to configuration file')
 
@@ -36,22 +38,25 @@ class DeployerApplication(tornado.web.Application):
             print('Empty configuration or not a dictionary on top level')
             sys.exit(1)
 
+        node_definition = {
+            'pwd': str,
+            'token': str,
+            'use_notification': bool,
+            'notification_group': str,
+            'commands': list
+        }
+
         for serviceName, attributes in parsed.items():
-            if not "pwd" in attributes or not isinstance(attributes['pwd'], str):
-                print(serviceName + '[pwd] should be a string')
-                sys.exit(1)
+            for attribute_name, class_type in node_definition.items():
+                if not attribute_name in attributes or not isinstance(attributes[attribute_name], class_type):
+                    print(serviceName + '[' + attribute_name + '] should be of a ' + str(class_type.__name__) + ' type')
+                    sys.exit(1)
 
-            if not "token" in attributes or not isinstance(attributes['token'], str):
-                print(serviceName + '[token] should be a string')
-                sys.exit(1)
-
-            if not "commands" in attributes or not isinstance(attributes['commands'], list):
-                print(serviceName + '[commands] is not a list')
-                sys.exit(1)
 
         self.config = parsed
 
-
+    def initialize(self):
+        self.notification = Notification()
 
 
 def create_application():
@@ -61,5 +66,6 @@ def create_application():
     ])
 
     app.parse_configuration()
+    app.initialize()
 
     return app

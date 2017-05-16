@@ -79,3 +79,11 @@ Integrations
 ------------
 
 Integrates well with [Wolnościowiec Notification](https://github.com/Wolnosciowiec/wolnosciowiec-notification) using a [shell client](https://github.com/Wolnosciowiec/wolnosciowiec-notification-shell-client)
+
+Good practices of securing the service
+--------------------------------------
+
+1. Its good to use long tokens
+2. Hide the service behind a load balancer with a request rate per second limited (to avoid brute force attacks)
+3. Optionally add a basic auth (this may impact usage of the service by external client applications)
+4. Use SSL behind load balancer when service is called from the internet

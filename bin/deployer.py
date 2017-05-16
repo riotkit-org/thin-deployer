@@ -5,10 +5,10 @@ import sys
 import os
 import tornado.ioloop
 
-__author__ = "Krzysztof Wesołowski"
+__author__ = "Krzysztof Wesolowski"
 __license__ = "LGPLv3"
-__maintainer__ = "Krzysztof Wesołowski"
-__copyright__ = "Copyleft by Wolnościowiec Team"
+__maintainer__ = "Krzysztof Wesolowski"
+__copyright__ = "Copyleft by Wolnosciowiec Team"
 
 t = sys.argv[0].replace(os.path.basename(sys.argv[0]), "") + "/../src/"
 

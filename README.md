@@ -7,6 +7,15 @@ Example case:
 - POST an information to the /deploy/my-service
 - Do the git pull && ./deploy.sh
 
+Free software
+-------------
+
+Created for an anarchist portal, with aim to propagate the freedom and grass-roots social movements where the human and it's needs is on first place, not the capital and profit.
+
+- https://wolnosciowiec.net
+- http://iwa-ait.org
+- http://zsp.net.pl
+
 Configuration
 -------------
 

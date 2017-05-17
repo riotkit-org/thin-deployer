@@ -1,6 +1,5 @@
 
 from healthcheck import TornadoHandler, HealthCheck
-import shutil
 import os
 import base64
 
@@ -68,10 +67,13 @@ class HealthCheckController(TornadoHandler):
         """
 
         max_percentage = int(os.getenv('HC_MAX_DISK_USAGE', 90))
-        total, used, free = shutil.disk_usage(__file__)
+        stats = os.statvfs(__file__)
+        free = stats.f_frsize * stats.f_bfree
+        total = stats.f_frsize * stats.f_blocks
+        percentage = free/total * 100
 
-        if free/total * 100 >= max_percentage:
-            return False, "Disk usage exceeds " + str(max_percentage) + "%"
+        if percentage >= max_percentage:
+            return False, "Disk usage exceeds " + str(max_percentage) + "%, actually its " + str(percentage) + "%"
 
         return True, "Disk usage is OK"
 

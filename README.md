@@ -77,8 +77,33 @@ Dependencies
 - Python 3
 - python-yaml
 - Tornado Framework
+- py-healthcheck
 - [Wolnościowiec Notification server set up somewhere](https://github.com/Wolnosciowiec/wolnosciowiec-notification) (optionally - only for notifications)
 - [Wolnościowiec Notification Shell Client](https://github.com/Wolnosciowiec/wolnosciowiec-notification-shell-client) (optionally - only for notifications)
+
+Health checking
+---------------
+
+Service provides a simple monitoring endpoint at GET /technical/healthcheck
+
+Authorization is done in two ways.
+Its up to you to use a preferred one in a request to the endpoint.
+
+- A header `X-Auth-Token` with a token as a value
+- Basic authorization data, login can be any, as a password please type the token
+
+Examples of headers:
+- Authorization: YWFhOnRlc3Q=
+- X-Auth-Token: test
+
+#### Configuration
+
+Health check endpoint is configurable via environment variables.
+
+- `HC_TOKEN={{ token }}` health check access token
+- `HC_MIN_TOKEN_LENGTH={{ min_length }}` minimum length of a token in every service
+- `HC_MAX_DISK_USAGE={{ max_disk_usage_percentage }}` defaults to 90 (it's 90%), when disk usage is higher or equals to this value then an error will be reported
+
 
 Integrations
 ------------

@@ -7,7 +7,9 @@ import yaml
 from tornado.options import define, parse_command_line, options
 from Deployer.Controller.DeployerController import DeployerController
 from Deployer.Controller.HelloController import HelloController
+from Deployer.Controller.HealthCheckController import HealthCheckController
 from Deployer.Service.Notification import Notification
+
 
 define('configuration', default=os.path.expanduser('~/.deployer.yml'), help='Path to configuration file', type=str)
 define('port', default=8012, help='Port to listen on', type=int)
@@ -15,8 +17,8 @@ define('listen', default='', help='IP address to listen on, defaults to 0.0.0.0 
 
 parse_command_line()
 
-class DeployerApplication(tornado.web.Application):
 
+class DeployerApplication(tornado.web.Application):
     config = {}
 
     def parse_configuration(self, path = None):
@@ -73,7 +75,6 @@ class DeployerApplication(tornado.web.Application):
 
             self.config[serviceName] = attributes
 
-
     def initialize(self):
         self.notification = Notification()
 
@@ -81,6 +82,7 @@ class DeployerApplication(tornado.web.Application):
 def create_application():
     app = DeployerApplication([
         (r"/deploy/(?P<serviceName>[A-Za-z0-9\.\-\_]+)", DeployerController),
+        (r"/technical/healthcheck", HealthCheckController, dict(checker="")),
         (r"/", HelloController)
     ])
 

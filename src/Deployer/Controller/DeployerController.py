@@ -4,6 +4,7 @@ import subprocess
 import pwd
 import os
 
+
 class DeployerController(tornado.web.RequestHandler):
 
     def post(self, serviceName):
@@ -31,7 +32,7 @@ class DeployerController(tornado.web.RequestHandler):
             tornado.log.app_log.warning('Invalid X-Auth-Token header value for service "' + serviceName + '"')
             return
 
-        output, is_success = self._run_commands(config)
+        output, is_success = self._run_commands(config, serviceName)
 
         # send a response
         self.set_status(202, "Accepted")
@@ -62,20 +63,22 @@ class DeployerController(tornado.web.RequestHandler):
 
         self.application.notification.send_log(output, config['notification_group'], '"' + service_name + '" deployment finished ' + status_name)
 
-    def _run_commands(self, service):
+    def _run_commands(self, service, service_name):
         """
         Run commands for a service
         :param service: Service definition 
         :return: 
         """
 
-        output = ""
+        output = " # Deployment started: " + service_name
+        output += "\n"
 
         for command in service['commands']:
             tornado.log.app_log.warning('Invoking "' + command + '" in "' + service['pwd'] + '"')
 
             try:
-                output += str(self._invoke_process(command, service['pwd']))
+                output += " > " + command
+                output += str(self._invoke_process(command, service['pwd'])) + "\n\n"
             except subprocess.CalledProcessError as exception:
                 message = 'Command "' + command + '" failed, output: "' + str(exception.output) + '"'
 
@@ -85,7 +88,6 @@ class DeployerController(tornado.web.RequestHandler):
                 return output, False
 
         return output, True
-
 
     def _invoke_process(self, commmand, pwd):
         return str(subprocess.check_output(commmand, shell=True, cwd=pwd))

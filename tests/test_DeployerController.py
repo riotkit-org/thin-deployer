@@ -19,7 +19,7 @@ class TestDeployerController(HttpTestCase):
         response = self.fetch('/deploy/test?token=not-valid')
         self.assertEqual(response.code, 403)
 
-        data = json.loads(response.body)
+        data = json.loads(response.body.decode('utf-8'))
 
         self.assertNotIn('output', data)
         self.assertIn('message', data)
@@ -51,7 +51,7 @@ class TestDeployerController(HttpTestCase):
             body='{"branch": "not-considered-branch-by-regexp"}'
         )
 
-        data = json.loads(response.body)
+        data = json.loads(response.body.decode('utf-8'))
 
         self.assertEqual(response.code, 200)
         self.assertEqual('Request validation returned a status that there is no need to deploy', data['output'])

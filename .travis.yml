@@ -10,5 +10,6 @@ before_script:
   - make install_dependencies
 
 script:
+  - ./bin/deployer.py --configuration=./tests/.deployer.yml --help
   - make test
-  - ./bin/deployer.py --configuration=./tests/.deployer.yml
+

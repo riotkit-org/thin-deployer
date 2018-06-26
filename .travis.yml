@@ -13,4 +13,4 @@ before_script:
 
 script:
   - make test
-  - make run
+  - ./bin/deployer.py --configuration=./tests/.deployer.yml

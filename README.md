@@ -1,6 +1,8 @@
 Thin Deployer
 =============
 
+[![Build Status](https://travis-ci.org/Wolnosciowiec/thin-deployer.svg?branch=master)](https://travis-ci.org/Wolnosciowiec/thin-deployer)
+
 Securely runs your deployment commands triggered by a HTTP call.
 
 Example case:

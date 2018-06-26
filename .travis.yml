@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "pypy3"
+sudo: false
+
+before_script:
+  - make install_dependencies
+
+script:
+  - make test
+  - make run

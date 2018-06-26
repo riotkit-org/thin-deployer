@@ -5,10 +5,11 @@ import os
 import sys
 import yaml
 from tornado.options import define, parse_command_line, options
-from Deployer.Controller.DeployerController import DeployerController
-from Deployer.Controller.HelloController import HelloController
-from Deployer.Controller.HealthCheckController import HealthCheckController
-from Deployer.Service.Notification import Notification
+
+from .Controller.DeployerController import DeployerController
+from .Controller.HelloController import HelloController
+from .Controller.HealthCheckController import HealthCheckController
+from .Service.Notification import Notification
 
 
 define('configuration', default=os.path.expanduser('~/.deployer.yml'), help='Path to configuration file', type=str)
@@ -21,7 +22,7 @@ parse_command_line()
 class DeployerApplication(tornado.web.Application):
     config = {}
 
-    def parse_configuration(self, path = None):
+    def parse_configuration(self, path=None):
         """
             Parse configuration YAML file
             (validates before proceeding)
@@ -60,7 +61,8 @@ class DeployerApplication(tornado.web.Application):
             'token': str,
             'use_notification': bool,
             'notification_group': str,
-            'commands': list
+            'commands': list,
+            'request_regexp': str
         }
 
         for serviceName, attributes in parsed.items():
@@ -79,14 +81,14 @@ class DeployerApplication(tornado.web.Application):
         self.notification = Notification()
 
 
-def create_application():
+def create_application(path=None):
     app = DeployerApplication([
-        (r"/deploy/(?P<serviceName>[A-Za-z0-9\.\-\_]+)", DeployerController),
+        (r"/deploy/(?P<service_name>[A-Za-z0-9\.\-\_]+)", DeployerController),
         (r"/technical/healthcheck", HealthCheckController, dict(checker="")),
         (r"/", HelloController)
     ])
 
-    app.parse_configuration()
+    app.parse_configuration(path)
     app.initialize()
 
     return app

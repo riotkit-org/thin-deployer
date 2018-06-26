@@ -1,38 +1,43 @@
+
 import tornado.web
 import tornado.log
-import subprocess
+from .. import Service
 import pwd
 import os
+import re
 
 
 class DeployerController(tornado.web.RequestHandler):
 
-    def post(self, serviceName):
+    def data_received(self, chunk):
+        pass
+
+    def get(self, service_name):
+        return self.post(service_name)
+
+    def post(self, service_name):
         """
         Handle input request
-        :param serviceName: 
-        :return: 
         """
 
         # get service information
-        if not serviceName in self.application.config:
-            self.write({'message': 'Cannot find service', 'serviceName': serviceName})
+        if service_name not in self.application.config:
+            self.write({'message': 'Cannot find service', 'serviceName': service_name})
             self.set_status(404, "Not Found")
 
-            tornado.log.app_log.warning('Tried to reach service "' + str(serviceName) + '", but its not defined')
+            tornado.log.app_log.warning('Tried to reach service "' + str(service_name) + '", but its not defined')
             return
 
-        config = self.application.config[serviceName]
+        config = self.application.config[service_name]
 
-        # validate authorization
-        if not "X-Auth-Token" in self.request.headers or self.request.headers['X-Auth-Token'] != config['token']:
-            self.write({'message': 'Invalid auth token, please verify the X-Auth-Token header value', 'serviceName': serviceName})
-            self.set_status(403, "Forbidden")
-
-            tornado.log.app_log.warning('Invalid X-Auth-Token header value for service "' + serviceName + '"')
+        if not self._assert_has_access(service_name, config):
             return
 
-        output, is_success = self._run_commands(config, serviceName)
+        if not self._validate_request(config):
+            self.set_status(200, "OK")
+            return
+
+        output, is_success = Service.CommandRunner.run(config, service_name)
 
         # send a response
         self.set_status(202, "Accepted")
@@ -44,50 +49,54 @@ class DeployerController(tornado.web.RequestHandler):
         self.write({'output': output})
 
         # notify
-        self._notify(serviceName, output, config, is_success)
+        self._notify(service_name, output, config, is_success)
 
         return
 
-    def _notify(self, service_name, output, config, is_success):
+    def _validate_request(self, config: dict):
+        """
+        Check if the request body contains a match of a regexp
+        """
+        if "request_regexp" in config:
+            if not len(re.findall(config['request_regexp'], str(self.request.body))) > 0:
+                self.set_status(200, "OK")
+                self.write({'output': 'Request validation returned a status that there is no need to deploy'})
+                return False
+
+        return True
+
+    def _notify(self, service_name: str, output: str, config: dict, is_success: bool):
         """
         Send a notification if its enabled
-        :param service_name: 
-        :param output: 
-        :return: 
         """
 
+        if not config['use_notification']:
+            return
+
         if is_success:
-            status_name = "successully"
+            status_name = "successfully"
         else:
             status_name = "with a failure"
 
-        self.application.notification.send_log(output, config['notification_group'], '"' + service_name + '" deployment finished ' + status_name)
+        self.application.notification.send_log(
+            output,
+            config['notification_group'],
+            '"' + service_name + '" deployment finished ' + status_name
+        )
 
-    def _run_commands(self, service, service_name):
-        """
-        Run commands for a service
-        :param service: Service definition 
-        :return: 
-        """
+    def _assert_has_access(self, service_name: str, config: dict):
+        if "X-Auth-Token" in self.request.headers and self.request.headers['X-Auth-Token'] == config['token']:
+            return True
 
-        output = " # Deployment started: " + service_name
-        output += "\n"
+        if self.get_argument("token", None, True) == config['token']:
+            return True
 
-        for command in service['commands']:
-            tornado.log.app_log.warning('Invoking "' + command + '" in "' + service['pwd'] + '"')
+        self.write({
+            'message': 'Invalid auth token, please verify the X-Auth-Token header value or "token" query parameter',
+            'serviceName': service_name
+        })
 
-            try:
-                output += " > " + command
-                output += str(self._invoke_process(command, service['pwd'])) + "\n\n"
-            except subprocess.CalledProcessError as exception:
-                message = 'Command "' + command + '" failed, output: "' + str(exception.output) + '"'
-
-                output += message
-                tornado.log.app_log.error(message)
-
-                return output, False
-
-        return output, True
-
-    def _invoke_process(self, commmand, pwd):
-        return str(subprocess.check_output(commmand, shell=True, cwd=pwd))
+        self.set_status(403, "Forbidden")
+        tornado.log.app_log.warning('Invalid X-Auth-Token header value, and/or token query parameter for service '
+                                    '"' + service_name + '"')
+        return False

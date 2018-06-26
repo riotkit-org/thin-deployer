@@ -23,21 +23,44 @@ Default configuration path is ~/.deployer.yml, but can be specified with a switc
 
 Example:
 ```
+
+# service definition (and service name there)
 phpdenyhosts:
+    # token used to authorize via "token" GET parameter, or "X-Auth-Token" header
     token: some-token-goes-here-use-only-at-least-64-characters-long-tokens
+
+    # optional: support for notifying Slack and other messengers
+    # with wolnosciowiec-notification-client
     use_notification: true
     notification_group: "logs"
+
+    # working directory to be in to execute every command
     pwd: /var/www/app
+
+    # could be empty, if not empty then the deploy will execute
+    # only if the INCOMING REQUEST BODY will match this regexp
+    # useful for example to deploy only from a proper branch
+    request_regexp: "\"branch\": \"([production|stage]+)\""
+
+    # commands to execute in order
     commands:
         - git pull
         - composer install --no-dev
+
+# (...) there could be more service definitions
 ```
 
 Running
 -------
 
 ```
-python ./bin/deployer.py
+make install_dependencies
+
+# simplest form wil all default params
+make run
+
+# or advanced with possibility to add commandline switches
+python3 ./bin/deployer.py
 ```
 
 ##### Logging to file

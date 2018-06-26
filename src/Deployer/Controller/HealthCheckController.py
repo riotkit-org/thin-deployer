@@ -10,6 +10,9 @@ class HealthCheckController(TornadoHandler):
     Provides an information about health of the service
     """
 
+    def data_received(self, chunk):
+        pass
+
     def get(self, *args, **kwargs):
         """
         Adds authorization to the endpoint
@@ -50,7 +53,8 @@ class HealthCheckController(TornadoHandler):
 
         return True
 
-    def _decode_base64(self, data):
+    @staticmethod
+    def _decode_base64(data):
         return str(base64.b64decode(data))
 
     def initialize(self, checker):
@@ -60,7 +64,8 @@ class HealthCheckController(TornadoHandler):
             self._configured_token_too_weak
         ])
 
-    def _disk_space_checker(self):
+    @staticmethod
+    def _disk_space_checker():
         """
         Checks if disk usage is not X% or higher, defaults to 90
         :return: 

@@ -1,0 +1,17 @@
+test:
+    token: "123"
+    use_notification: false
+    notification_group: "logs"
+    pwd: /
+    request_regexp: ""
+    commands:
+        - ls
+
+test_regexp:
+    token: "456"
+    use_notification: false
+    notification_group: "logs"
+    pwd: /
+    request_regexp: "\"branch\": \"([production|stage]+)\""
+    commands:
+        - echo "Hello world"

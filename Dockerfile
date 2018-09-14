@@ -1,7 +1,7 @@
 FROM docker:latest
 
 RUN set -x\
-    && apk add --update python3 bash make curl wget grep sudo \
+    && apk add --update python3 bash make curl wget grep sudo git \
     && ln -s /usr/bin/python3 /usr/bin/python \
     && pip3 install 'docker-compose' \
     && docker --version \

@@ -33,5 +33,5 @@ class CommandRunner:
 
     @staticmethod
     def invoke_process(command: str, cwd: str):
-        return str(subprocess.check_output(command, shell=True, cwd=cwd))
+        return str(subprocess.check_output(command, shell=True, cwd=cwd, stderr=subprocess.STDOUT))
 

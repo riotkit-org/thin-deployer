@@ -1,6 +1,6 @@
 FROM docker:latest
 
-RUN apk add --update python3 bash make curl wget grep \
+RUN apk add --update python3 bash make curl wget grep sudo \
     && ln -s /usr/bin/python3 /usr/bin/python
 
 #

@@ -2,3 +2,4 @@ py-healthcheck>=1.6.1
 PyYAML>=3.12
 tornado>=4.5
 jsonschema>=2.6
+requests>=2.19

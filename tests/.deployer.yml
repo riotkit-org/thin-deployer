@@ -5,18 +5,26 @@ test:
 
     # keep your token strong, it's very important!
     token: "123"
+
+    # slack/mattermost notifications
     use_notification: false
-    notification_group: "logs"
+    notification_webhook_url: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+
     pwd: /
     request_regexp: ""
+
+    # commands to execute, each is executed in a separate subshell, no variables passing is possible
     commands:
         - ls %dir%
 
 test_regexp:
     token: "456"
+
     use_notification: false
-    notification_group: "logs"
+    notification_webhook_url: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
     pwd: /
+
+    # allow to deploy only when request body is matching this regular expression
     request_regexp: "\"branch\": \"([production|stage]+)\""
     commands:
         - echo "Hello world"

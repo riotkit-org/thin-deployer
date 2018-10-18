@@ -1,20 +1,22 @@
 
-import subprocess
+import requests
+import json
 
 
 class Notification:
-    def send_log(self, output, group_name, title):
+
+    @staticmethod
+    def send_log(output: str, webhook_url: str, title: str) -> bool:
         """
-        Sends the log output to the Wolnosciowiec Notification using the shell client
-        :param output: 
-        :return: 
+        Sends the log output to the Mattermost / Slack
+        :return:
         """
 
-        ps = subprocess.Popen(('echo', output), stdout=subprocess.PIPE)
-        output = subprocess.check_output(
-            ('notification-message-send', '-g', group_name, '-t', 'Thin Deployer: ' + title),
-            stdin=ps.stdout
+        slack_data = {'text': title + ": \n\n" + output.replace('\\n', "\n") + "\n\n"}
+
+        response = requests.post(
+            webhook_url, data=json.dumps(slack_data),
+            headers={'Content-Type': 'application/json'}
         )
-        ps.wait()
 
-        return output
+        return response.status_code == 200

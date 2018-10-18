@@ -60,7 +60,7 @@ class DeployerApplication(tornado.web.Application):
             'pwd': str,
             'token': str,
             'use_notification': bool,
-            'notification_group': str,
+            'notification_webhook_url': str,
             'commands': list,
             'request_regexp': str
         }

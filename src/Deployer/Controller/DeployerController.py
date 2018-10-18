@@ -92,16 +92,16 @@ class DeployerController(tornado.web.RequestHandler):
         if not config['use_notification']:
             return
 
-        if is_success:
-            status_name = "successfully"
-        else:
-            status_name = "with a failure"
+        status_name = "successfully" if is_success else "with a failure"
 
-        self.application.notification.send_log(
+        notify_status = self.application.notification.send_log(
             output,
-            config['notification_group'],
+            config['notification_webhook_url'],
             '"' + service_name + '" deployment finished ' + status_name
         )
+
+        if not notify_status:
+            tornado.log.app_log.warning('Notification service returned an error')
 
     def _assert_has_access(self, service_name: str, config: dict):
         if "X-Auth-Token" in self.request.headers and self.request.headers['X-Auth-Token'] == config['token']:

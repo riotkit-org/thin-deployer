@@ -5,6 +5,7 @@ from .. import Service
 import pwd
 import os
 import re
+import shlex
 
 
 class DeployerController(tornado.web.RequestHandler):
@@ -22,10 +23,7 @@ class DeployerController(tornado.web.RequestHandler):
 
         # get service information
         if service_name not in self.application.config:
-            self.write({'message': 'Cannot find service', 'serviceName': service_name})
-            self.set_status(404, "Not Found")
-
-            tornado.log.app_log.warning('Tried to reach service "' + str(service_name) + '", but its not defined')
+            self.create_non_existing_service_response(service_name)
             return
 
         config = self.application.config[service_name]
@@ -37,6 +35,7 @@ class DeployerController(tornado.web.RequestHandler):
             self.set_status(200, "OK")
             return
 
+        config = self._add_request_vars(config)
         output, is_success = Service.CommandRunner.run(config, service_name)
 
         # send a response
@@ -53,9 +52,29 @@ class DeployerController(tornado.web.RequestHandler):
 
         return
 
-    def _validate_request(self, config: dict):
+    def _add_request_vars(self, config: dict) -> dict:
+        """ Take GET parameters into account, so they will be placed in the command
+            Examples: some-command %password%
         """
-        Check if the request body contains a match of a regexp
+
+        if 'vars' not in config:
+            config['vars'] = {}
+
+        for var, values in self.request.arguments.items():
+            # do not take arrays into the consideration
+            if len(values) > 1:
+                continue
+
+            value = values[0].decode('utf-8')
+            escaped_value = shlex.quote(value)
+            config['vars'][var] = escaped_value
+
+        return config
+
+    def _validate_request(self, config: dict) -> bool:
+        """
+            - Check if the request body contains a match of a regexp
+            - Check if we can decrypt request body (if encrypted)
         """
         if "request_regexp" in config:
             if not len(re.findall(config['request_regexp'], str(self.request.body))) > 0:
@@ -100,3 +119,9 @@ class DeployerController(tornado.web.RequestHandler):
         tornado.log.app_log.warning('Invalid X-Auth-Token header value, and/or token query parameter for service '
                                     '"' + service_name + '"')
         return False
+
+    def create_non_existing_service_response(self, service_name: str):
+        self.write({'message': 'Cannot find service', 'serviceName': service_name})
+        self.set_status(404, "Not Found")
+
+        tornado.log.app_log.warning('Tried to reach service "' + str(service_name) + '", but its not defined')

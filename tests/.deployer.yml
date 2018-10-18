@@ -1,11 +1,16 @@
 test:
+    # always provide default values
+    vars:
+        dir: ''
+
+    # keep your token strong, it's very important!
     token: "123"
     use_notification: false
     notification_group: "logs"
     pwd: /
     request_regexp: ""
     commands:
-        - ls
+        - ls %dir%
 
 test_regexp:
     token: "456"

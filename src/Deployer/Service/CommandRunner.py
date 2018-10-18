@@ -6,7 +6,7 @@ import tornado.log
 class CommandRunner:
 
     @staticmethod
-    def run(service: dict, service_name: str):
+    def run(service: dict, service_name: str) -> tuple:
         """
         Run commands for a service
         """
@@ -15,6 +15,7 @@ class CommandRunner:
         output += "\n"
 
         for command in service['commands']:
+            command = CommandRunner.apply_vars(command, service)
             tornado.log.app_log.warning('Invoking "' + command + '" in "' + service['pwd'] + '"')
 
             try:
@@ -30,6 +31,15 @@ class CommandRunner:
                 return output, False
 
         return output, True
+
+    @staticmethod
+    def apply_vars(command: str, service: dict):
+        # if any vars were specified
+        if 'vars' in service:
+            for var, value in service['vars'].items():
+                command = command.replace('%' + var + '%', value)
+
+        return command
 
     @staticmethod
     def invoke_process(command: str, cwd: str):

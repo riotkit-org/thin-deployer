@@ -1,5 +1,6 @@
 
 import json
+import os
 
 if __name__ == '__main__':
     from.HttpTestCase import HttpTestCase
@@ -14,6 +15,15 @@ class TestDeployerController(HttpTestCase):
         self.assertEqual(response.code, 202)
         self.assertIn('# Deployment started: test', str(response.body))
         self.assertIn('home', str(response.body))
+
+    def test_deploy_with_valid_token_and_provided_variable(self):
+        response = self.fetch('/deploy/test?token=123&dir=' + os.path.dirname(os.path.abspath(__file__)))
+        self.assertEqual(response.code, 202)
+        self.assertIn('test_HelloController.py', str(response.body))
+
+    def test_escapes_arguments_properly(self):
+        response = self.fetch('/deploy/test?token=123&dir=\'&&/bin/bash')
+        self.assertEqual(response.code, 500)
 
     def test_will_not_deploy_if_token_not_valid(self):
         response = self.fetch('/deploy/test?token=not-valid')

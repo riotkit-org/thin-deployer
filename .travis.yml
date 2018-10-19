@@ -4,9 +4,9 @@ python:
     - '3.5'
     - '3.6'
     - pypy3
-sudo: false
+sudo: true
 before_script:
-    - make install_dependencies install_as_python_package
+    - sudo make install_dependencies install_as_python_package
 script:
     - "thin-deployer --configuration=./tests/.deployer.yml --help"
     - make test

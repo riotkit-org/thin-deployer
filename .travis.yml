@@ -10,7 +10,7 @@ before_script:
     - make install_as_python_package
 script:
     # check if the binary does not show a fatal error
-    - "python ./thindeployer/__init__.py --configuration=./tests/.deployer.yml --help"
+    - "thin-deployer --configuration=./tests/.deployer.yml --help"
 
     # execute unit tests to check inner logic
     - make test

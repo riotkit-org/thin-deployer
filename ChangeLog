@@ -1,0 +1,37 @@
+CHANGES
+=======
+
+* Migrated from Wolnościowiec Notification service to the Slack / Mattermost
+* Updated Makefile
+* Implemented somehow secure parametrization
+* Docker: Added git
+* Docker: Added docker-compose
+* Docker: Added sudo
+* Redirected stderr to stdout
+* Added /deployer-root and workdir
+* Added docker support
+* Removed Python 3.7 from travis build as there is some bug in travis that prevents it from downloading for build
+* Added Python 3.7 to travis build
+* Fixed travis build
+* Fixed travis build
+* Disabled support for Python 3.2 and 3.3 because of Tornado lack of support for those versions
+* Fixed travis build
+* Added travis badge
+* Refactored and added tests
+* Update requirements.txt
+* Update requirements.txt
+* Added compatibility with Python 2.7
+* Added support for health checking of the service
+* Updated message formatting
+* Added support for "conf.d"
+* Fixed problem with encoding
+* Fixed problem with encoding
+* Fixed problem with encoding
+* Added support for --port and --listen switches
+* Added security good practices to the README.md
+* Added GNU LGPLv3 license
+* Added information about author
+* Added README
+* - Better HTTP status codes support - Notifications - Interrupting deployment on at least one step failed
+* Clean up
+* First commit

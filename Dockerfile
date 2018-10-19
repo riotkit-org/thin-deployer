@@ -14,10 +14,10 @@ ADD ./ /app
 RUN set -x \
     && cd /app \
     && cp ./tests/.deployer.yml /root/.deployer.yml \
-    && make install_dependencies test \
+    && make install_dependencies install_as_python_package test \
     && mkdir /deployer-root
 
 EXPOSE 8012
 WORKDIR "/deployer-root"
 
-ENTRYPOINT /bin/bash -c 'cd /app && ./bin/deployer.py'
+ENTRYPOINT thin-deployer

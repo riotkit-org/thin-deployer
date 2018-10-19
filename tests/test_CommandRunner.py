@@ -4,8 +4,8 @@ import sys
 import os
 import inspect
 
-sys.path.append(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))) + '/../src/Deployer')
-import Service.CommandRunner
+sys.path.append(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))) + '/..')
+from thindeployer import Service
 
 
 class TestCommandRunner(unittest.TestCase):

@@ -1,2 +1,4 @@
 *.pyc
-
+/Thin_Deployer.egg-info
+/.eggs
+/build

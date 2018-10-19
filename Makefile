@@ -39,6 +39,14 @@ install_dependencies:
 test:
 	python3 -m unittest discover -s ./tests
 
+## Build PyPI package
+build:
+	python3 ./setup.py build
+
+## Build PyPI package
+install_as_python_package:
+	python3 ./setup.py install
+
 ## Build and run a Docker container
 container: build_container run_container
 

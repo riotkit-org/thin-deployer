@@ -52,6 +52,15 @@ phpdenyhosts:
 # (...) there could be more service definitions
 ```
 
+Installing
+----------
+
+Best way is probably to install from PyPI with pip.
+
+```bash
+thin-deployer --configuration=/etc/thin-deployer/.deployer.yml
+```
+
 Running
 -------
 

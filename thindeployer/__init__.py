@@ -5,6 +5,7 @@ import os
 import sys
 import yaml
 from tornado.options import define, parse_command_line, options
+import tornado.ioloop
 
 from .Controller.DeployerController import DeployerController
 from .Controller.HelloController import HelloController
@@ -92,3 +93,14 @@ def create_application(path=None):
     app.initialize()
 
     return app
+
+
+def run_application():
+    app = create_application()
+    app.listen(options.port, options.listen)
+
+    tornado.ioloop.IOLoop.current().start()
+
+
+if __name__ == "__main__":
+    run_application()

@@ -7,9 +7,9 @@ python:
 sudo: false
 before_script:
     - make install_dependencies
-    - sudo make install_as_python_package
+    - make install_as_python_package
 script:
-    - "thin-deployer --configuration=./tests/.deployer.yml --help"
+    - "python ./thindeployer/__init__.py --configuration=./tests/.deployer.yml --help"
     - make test
 
 deploy:

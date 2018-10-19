@@ -1,6 +1,8 @@
 
 .SILENT:
 IS_ENV_PRESENT=$(shell test -e .env && echo -n yes)
+PIP_BIN = pip
+PY_BIN = python
 
 ifeq ($(IS_ENV_PRESENT), yes)
 	include .env
@@ -33,19 +35,19 @@ run:
 
 ## Install requirements
 install_dependencies:
-	pip3 install -r ./requirements.txt
+	${PIP_BIN} install -r ./requirements.txt
 
 ## Run unit tests
 test:
-	python3 -m unittest discover -s ./tests
+	${PY_BIN} -m unittest discover -s ./tests
 
 ## Build PyPI package
 build:
-	python3 ./setup.py build
+	${PY_BIN} ./setup.py build
 
 ## Build PyPI package
 install_as_python_package:
-	python3 ./setup.py install
+	${PY_BIN} ./setup.py install
 
 ## Build and run a Docker container
 container: build_container run_container

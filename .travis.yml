@@ -4,7 +4,7 @@ python:
     - '3.5'
     - '3.6'
     - pypy3
-sudo: false
+sudo: true
 before_script:
     - make install_dependencies
     - make install_as_python_package

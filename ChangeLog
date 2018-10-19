@@ -1,6 +1,18 @@
 CHANGES
 =======
 
+* Travis test: #6
+* Travis test: #5
+* Travis test: #4
+* Travis test: #3
+* Travis test: #2
+* Travis test: #1
+* Testing travis config
+* Testing travis config
+* Testing travis config
+* Testing travis config
+* Testing travis config
+* Added PyPI configuration using PBR, refactored entrypoint
 * Migrated from Wolnościowiec Notification service to the Slack / Mattermost
 * Updated Makefile
 * Implemented somehow secure parametrization

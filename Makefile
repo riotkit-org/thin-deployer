@@ -45,9 +45,13 @@ test:
 build:
 	${PY_BIN} ./setup.py build
 
-## Build PyPI package
+## Install as Python package globally
 install_as_python_package:
 	${PY_BIN} ./setup.py install
+
+## Install as Python package in current user directory
+install_as_python_package_nonprivileged:
+	${PY_BIN} ./setup.py install --user
 
 ## Build and run a Docker container
 container: build_container run_container

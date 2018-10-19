@@ -9,6 +9,10 @@ Example case:
 - POST an information to the /deploy/my-service
 - Do the git pull && ./deploy.sh
 
+PIP: https://pypi.org/project/Thin-Deployer/
+Travis: https://travis-ci.org/Wolnosciowiec/thin-deployer
+Docker: https://hub.docker.com/r/wolnosciowiec/thin-deployer/
+
 Free software
 -------------
 
@@ -52,22 +56,32 @@ phpdenyhosts:
 # (...) there could be more service definitions
 ```
 
-Installing
-----------
+Installing via PIP
+------------------
 
-Best way is probably to install from PyPI with pip.
+One of the ways, a traditional one is to install as a Python package on the host machine.
 
 ```bash
+pip install Thin-Deployer
 thin-deployer --configuration=/etc/thin-deployer/.deployer.yml
 ```
 
-Running
--------
+Installing via Docker
+---------------------
+
+Modern and more secure way is to use a docker image to run the thin-deployer inside of an isolated container.
+
+```bash
+sudo docker run -p 8012:8012 -v ./deployer.yml:/root/.deployer.yml --rm --name thin-deployer wolnosciowiec/thin-deployer
+```
+
+Running dev environment
+-----------------------
 
 ```
 make install_dependencies
 
-# simplest form wil all default params
+# simplest form with all default params
 make run
 
 # or advanced with possibility to add commandline switches

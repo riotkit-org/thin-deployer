@@ -9,8 +9,14 @@ before_script:
     - make install_dependencies
     - make install_as_python_package
 script:
+    # check if the binary does not show a fatal error
     - "python ./thindeployer/__init__.py --configuration=./tests/.deployer.yml --help"
+
+    # execute unit tests to check inner logic
     - make test
+
+    # check if the container builds properly
+    - make build_container
 
 deploy:
     skip_cleanup: true

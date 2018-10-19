@@ -14,7 +14,7 @@ ADD ./ /app
 RUN set -x \
     && cd /app \
     && cp ./tests/.deployer.yml /root/.deployer.yml \
-    && make install_dependencies install_as_python_package test \
+    && make install_dependencies install_as_python_package test PIP_BIN=pip3 \
     && mkdir /deployer-root
 
 EXPOSE 8012

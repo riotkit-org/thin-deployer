@@ -18,6 +18,9 @@ script:
     # check if the container builds properly
     - make build_container
 
+    # print version number, if the tagged version is properly detected
+    - python setup.py --version
+
 deploy:
     skip_cleanup: true
     provider: pypi

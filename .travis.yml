@@ -6,7 +6,7 @@ python:
     - pypy3
 sudo: false
 before_script:
-    - make install_dependencies
+    - make install_dependencies install_as_python_package
 script:
     - "thin-deployer --configuration=./tests/.deployer.yml --help"
     - make test

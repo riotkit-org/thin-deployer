@@ -5,7 +5,9 @@ RUN set -x\
     && ln -s /usr/bin/python3 /usr/bin/python \
     && pip3 install 'docker-compose' \
     && docker --version \
-    && docker-compose --version
+    && docker-compose --version \
+    && addgroup -g 1800 -S deployer \
+    && adduser -u 1800 -D -S -G deployer deployer
 
 #
 # Build the application, run tests to verify

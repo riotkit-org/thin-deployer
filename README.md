@@ -1,7 +1,7 @@
 Thin Deployer
 =============
 
-[![Build Status](https://travis-ci.org/Wolnosciowiec/thin-deployer.svg?branch=master)](https://travis-ci.org/Wolnosciowiec/thin-deployer)
+[![Build Status](https://travis-ci.org/riotkit-org/thin-deployer.svg?branch=master)](https://travis-ci.org/riotkit-org/thin-deployer)
 
 Securely runs your deployment commands triggered by a HTTP call.
 
@@ -10,7 +10,7 @@ Example case:
 - Do the git pull && ./deploy.sh
 
 PIP: https://pypi.org/project/Thin-Deployer/
-Travis: https://travis-ci.org/Wolnosciowiec/thin-deployer
+Travis: https://travis-ci.org/riotkit-org/thin-deployer
 Docker: https://hub.docker.com/r/wolnosciowiec/thin-deployer/
 
 Free software

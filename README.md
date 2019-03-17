@@ -152,6 +152,10 @@ Health check endpoint is configurable via environment variables.
 - `HC_MIN_TOKEN_LENGTH={{ min_length }}` minimum length of a token in every service
 - `HC_MAX_DISK_USAGE={{ max_disk_usage_percentage }}` defaults to 90 (it's 90%), when disk usage is higher or equals to this value then an error will be reported
 
+Alternatives
+------------
+
+- Webhook: https://github.com/adnanh/webhook
 
 Integrations
 ------------

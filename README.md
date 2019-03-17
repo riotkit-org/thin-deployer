@@ -157,10 +157,10 @@ Alternatives
 
 - Webhook: https://github.com/adnanh/webhook
 
-Integrations
-------------
+Notifications
+-------------
 
-Integrates well with [Wolnościowiec Notification](https://github.com/Wolnosciowiec/wolnosciowiec-notification) using a [shell client](https://github.com/Wolnosciowiec/wolnosciowiec-notification-shell-client)
+Each deployment can produce a notification with output, supported notification format is Slack/Mattermost (webhook url required)
 
 Good practices of securing the service
 --------------------------------------

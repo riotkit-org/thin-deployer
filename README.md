@@ -1,7 +1,7 @@
 Thin Deployer
 =============
 
-[![Build Status](https://travis-ci.org/Wolnosciowiec/thin-deployer.svg?branch=master)](https://travis-ci.org/Wolnosciowiec/thin-deployer)
+[![Build Status](https://travis-ci.org/riotkit-org/thin-deployer.svg?branch=master)](https://travis-ci.org/riotkit-org/thin-deployer)
 
 Securely runs your deployment commands triggered by a HTTP call.
 
@@ -10,7 +10,7 @@ Example case:
 - Do the git pull && ./deploy.sh
 
 PIP: https://pypi.org/project/Thin-Deployer/
-Travis: https://travis-ci.org/Wolnosciowiec/thin-deployer
+Travis: https://travis-ci.org/riotkit-org/thin-deployer
 Docker: https://hub.docker.com/r/wolnosciowiec/thin-deployer/
 
 Free software
@@ -152,11 +152,15 @@ Health check endpoint is configurable via environment variables.
 - `HC_MIN_TOKEN_LENGTH={{ min_length }}` minimum length of a token in every service
 - `HC_MAX_DISK_USAGE={{ max_disk_usage_percentage }}` defaults to 90 (it's 90%), when disk usage is higher or equals to this value then an error will be reported
 
-
-Integrations
+Alternatives
 ------------
 
-Integrates well with [Wolnościowiec Notification](https://github.com/Wolnosciowiec/wolnosciowiec-notification) using a [shell client](https://github.com/Wolnosciowiec/wolnosciowiec-notification-shell-client)
+- Webhook: https://github.com/adnanh/webhook
+
+Notifications
+-------------
+
+Each deployment can produce a notification with output, supported notification format is Slack/Mattermost (webhook url required)
 
 Good practices of securing the service
 --------------------------------------

@@ -2,6 +2,12 @@ Thin Deployer
 =============
 
 [![Build Status](https://travis-ci.org/riotkit-org/thin-deployer.svg?branch=master)](https://travis-ci.org/riotkit-org/thin-deployer)
+![Docker Build Status](https://img.shields.io/docker/build/wolnosciowiec/thin-deployer.svg)
+![GitHub release](https://img.shields.io/github/release/riotkit-org/thin-deployer.svg?style=popout)
+![PyPI](https://img.shields.io/pypi/v/thin-deployer.svg?style=popout)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/thin-deployer.svg)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/thin-deployer.svg)
+[![codecov](https://codecov.io/gh/riotkit-org/thin-deployer/branch/master/graph/badge.svg)](https://codecov.io/gh/riotkit-org/thin-deployer)
 
 Securely runs your deployment commands triggered by a HTTP call.
 
